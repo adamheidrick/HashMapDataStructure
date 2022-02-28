@@ -122,6 +122,9 @@ class HashMap:
         """
         return self.size / self.capacity
 
+    def resize_put(self, node: object) -> object:
+        return
+
 
     def resize_table(self, new_capacity: int) -> None:
         """
@@ -130,7 +133,32 @@ class HashMap:
         if new_capacity <= 1:
             return
 
-        self.capacity = new_capacity
+
+        # iterate through active DA and put into resize function
+        # create modified put called put_resize takes in object as parameter
+        # makes self.buckets = new_buckets
+
+        new_buckets = DynamicArray()
+        for _ in range(new_capacity):
+            new_buckets.append(LinkedList())
+
+        for index in range(self.capacity):
+            for item in self.buckets[index]:
+                index = self.hash_function(item.key) % new_capacity
+                new_buckets[index].insert(item.key, item.value)
+
+        self.buckets = new_buckets
+
+
+
+
+
+
+
+        # self.capacity = new_capacity  # dont forget this
+
+
+
 
     def get_keys(self) -> DynamicArray:
         """
