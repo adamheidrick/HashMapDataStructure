@@ -86,7 +86,7 @@ class HashMap:
             self.buckets[index].insert(key, value)
 
         else:
-            self.buckets[index].contains(value).value = value
+            self.buckets[index].contains(key).value = value
 
 
 
