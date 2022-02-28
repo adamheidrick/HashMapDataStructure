@@ -1,9 +1,9 @@
-# Name:
-# OSU Email:
+# Name: Adam Heidrick
+# OSU Email: heidrica@oregonstate.edu
 # Course: CS261 - Data Structures
-# Assignment:
-# Due Date:
-# Description:
+# Assignment: 6 Hash Map
+# Due Date: 11 March 2022
+# Description: Open Addressing Hash Map
 
 
 from a6_include import *
