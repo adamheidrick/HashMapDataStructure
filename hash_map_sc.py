@@ -96,7 +96,11 @@ class HashMap:
         """
         TODO: Write this implementation
         """
-        pass
+        index = self.hash_function(key) % self.capacity
+        if self.buckets[index].contains(key) is None:
+            return
+
+        self.buckets[index].remove(key)
 
     def contains_key(self, key: str) -> bool:
         """
@@ -122,21 +126,12 @@ class HashMap:
         """
         return self.size / self.capacity
 
-    def resize_put(self, node: object) -> object:
-        return
-
-
     def resize_table(self, new_capacity: int) -> None:
         """
         TODO: Write this implementation
         """
         if new_capacity < 1:
             return
-
-
-        # iterate through active DA and put into resize function
-        # create modified put called put_resize takes in object as parameter
-        # makes self.buckets = new_buckets
 
         new_buckets = DynamicArray()
         for _ in range(new_capacity):
@@ -287,23 +282,23 @@ if __name__ == "__main__":
     #     print(i, m.get(str(i)), m.get(str(i)) == i * 10)
     #     print(i + 1, m.get(str(i + 1)), m.get(str(i + 1)) == (i + 1) * 10)
     #
-    # print("\nPDF - remove example 1")
-    # print("----------------------")
-    # m = HashMap(50, hash_function_1)
-    # print(m.get('key1'))
-    # m.put('key1', 10)
-    # print(m.get('key1'))
-    # m.remove('key1')
-    # print(m.get('key1'))
-    # m.remove('key4')
-    #
-    print("\nPDF - resize example 1")
+    print("\nPDF - remove example 1")
     print("----------------------")
-    m = HashMap(20, hash_function_1)
+    m = HashMap(50, hash_function_1)
+    print(m.get('key1'))
     m.put('key1', 10)
-    print(m.size, m.capacity, m.get('key1'), m.contains_key('key1'))
-    m.resize_table(30)
-    print(m.size, m.capacity, m.get('key1'), m.contains_key('key1'))
+    print(m.get('key1'))
+    m.remove('key1')
+    print(m.get('key1'))
+    m.remove('key4')
+    #
+    # print("\nPDF - resize example 1")
+    # print("----------------------")
+    # m = HashMap(20, hash_function_1)
+    # m.put('key1', 10)
+    # print(m.size, m.capacity, m.get('key1'), m.contains_key('key1'))
+    # m.resize_table(30)
+    # print(m.size, m.capacity, m.get('key1'), m.contains_key('key1'))
     #
     # print("\nPDF - resize example 2")
     # print("----------------------")
