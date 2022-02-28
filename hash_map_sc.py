@@ -62,9 +62,8 @@ class HashMap:
         """
         TODO: Write this implementation
         """
-        self.buckets = DynamicArray()
-        for _ in range(self.capacity):
-            self.buckets.append(LinkedList())
+        for index in range(self.capacity):
+            self.buckets[index] = LinkedList()
         self.size = 0
 
     def get(self, key: str) -> object:
