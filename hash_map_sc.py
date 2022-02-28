@@ -83,11 +83,14 @@ class HashMap:
 
         if self.contains_key(key) is False:  # if the key does not exist yet then the size is increased.
             self.size += 1
+            self.buckets[index].insert(key, value)
 
         else:
-            self.buckets[index].remove(key)  # THIS NEEDS TO BE WORKED A BIT. IT SHOULD JUST UPDATE THE VALUE OF THE KEY
+            node = self.bucket[index].contains(key)
+            node.value = value
+       
 
-        self.buckets[index].insert(key, value)
+
 
     def remove(self, key: str) -> None:
         """
