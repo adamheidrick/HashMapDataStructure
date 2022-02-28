@@ -130,7 +130,7 @@ class HashMap:
         """
         TODO: Write this implementation
         """
-        if new_capacity <= 1:
+        if new_capacity < 1:
             return
 
 
@@ -149,16 +149,6 @@ class HashMap:
 
         self.buckets = new_buckets
         self.capacity = new_capacity
-
-
-
-
-
-
-
-        # self.capacity = new_capacity  # dont forget this
-
-
 
 
     def get_keys(self) -> DynamicArray:
