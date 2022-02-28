@@ -86,9 +86,7 @@ class HashMap:
             self.buckets[index].insert(key, value)
 
         else:
-            self.buckets[index].contains(key).value = value
-
-
+            self.buckets[index].contains(key).value = value  # This updates the value of the key.
 
     def remove(self, key: str) -> None:
         """
@@ -145,7 +143,6 @@ class HashMap:
 
         self.buckets = new_buckets
         self.capacity = new_capacity
-
 
     def get_keys(self) -> DynamicArray:
         """
