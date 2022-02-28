@@ -148,6 +148,7 @@ class HashMap:
                 new_buckets[index].insert(item.key, item.value)
 
         self.buckets = new_buckets
+        self.capacity = new_capacity
 
 
 
