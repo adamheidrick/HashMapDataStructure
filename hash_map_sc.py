@@ -60,85 +60,83 @@ class HashMap:
 
     def clear(self) -> None:
         """
-        TODO: Write this implementation
+        This method clears the contents of the hash map.
         """
-        for index in range(self.capacity):
+        for index in range(self.capacity):  # Iterates through the array and replaces each index with a fresh LL.
             self.buckets[index] = LinkedList()
-        self.size = 0
+        self.size = 0  # as this is tracked separately, size is reset.
 
     def get(self, key: str) -> object:
         """
-        TODO: Write this implementation
+        This method returns the value associated with the given key. It will return none if the key is not in the hash.
         """
         index = self.hash_function(key) % self.capacity
-        if self.buckets[index].contains(key) is None:
-            return None
-
+        if self.buckets[index].contains(key) is None:  # ues the linked list contains() class method.
+            return
         return self.buckets[index].contains(key).value
-
 
     def put(self, key: str, value: object) -> None:
         """
-        TODO: Write this implementation
+        This method updates the key/value pair in a hash map or inserts a new node if the key does not exist.
         """
         index = self.hash_function(key) % self.capacity
 
-        if self.contains_key(key) is False:
+        if self.contains_key(key) is False:  # if the key does not exist yet then the size is increased.
             self.size += 1
+            self.buckets[index].insert(key, value)
 
         else:
-            self.buckets[index].remove(key)
-
-        self.buckets[index].insert(key, value)
-
+            self.bucket[index].contains(key).value = value
 
     def remove(self, key: str) -> None:
         """
-        TODO: Write this implementation
+        This method removes the given key and its associated value from the hash map.
         """
         index = self.hash_function(key) % self.capacity
-        if self.buckets[index].contains(key) is None:
+
+        if self.buckets[index].contains(key) is None:  # If the key is not in the hash map, None is returned.
             return
 
-        self.buckets[index].remove(key)
+        self.buckets[index].remove(key)  # Uses the linked list remove() class method.
         self.size -= 1
 
     def contains_key(self, key: str) -> bool:
         """
-        TODO: Write this implementation
+        This method returns True if a key is in the hash map or False if not.
         """
         index = self.hash_function(key) % self.capacity
-        return self.buckets[index].contains(key) is not None
+        return self.buckets[index].contains(key) is not None  # uses the contains() class method of linked list.
 
     def empty_buckets(self) -> int:
         """
-        This method returns the number of empty buckets in the hash table
+        This method returns the number of empty buckets in the hash table.
         """
         buckets = 0
         for item in range(self.capacity):
-            if self.buckets[item].length() == 0:
+            if self.buckets[item].length() == 0:  # Uses the length() class method of linked list.
                 buckets += 1
         return buckets
 
     def table_load(self) -> float:
         """
-        TODO: Write this implementation
-        # number of elements divided by number of buckets
+        This method returns the current hash table load factor: n / m where n is total num of elements and m is
+        number of buckets.
         """
         return self.size / self.capacity
 
     def resize_table(self, new_capacity: int) -> None:
         """
-        TODO: Write this implementation
+        This method changes the capacity of the internal hash table. All existing key / value pairs remain in the new
+        hash map and all hash table links are rehashed. Nothing is done if the new size is less than 1.
         """
         if new_capacity < 1:
             return
 
-        new_buckets = DynamicArray()
+        new_buckets = DynamicArray()  # Create a new Dynamic array to fill with linked lists based on new capacity.
         for _ in range(new_capacity):
             new_buckets.append(LinkedList())
 
-        for index in range(self.capacity):
+        for index in range(self.capacity):  # Iterates through current hash map and rehashes links.
             for item in self.buckets[index]:
                 index = self.hash_function(item.key) % new_capacity
                 new_buckets[index].insert(item.key, item.value)
@@ -149,7 +147,7 @@ class HashMap:
 
     def get_keys(self) -> DynamicArray:
         """
-        TODO: Write this implementation
+        This method returns a Dynamic Array that contains all the keys stored in the hash map.
         """
         key_arr = DynamicArray()
         for index in range(self.capacity):
