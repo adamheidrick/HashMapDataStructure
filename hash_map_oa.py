@@ -95,40 +95,47 @@ class HashMap:
         """
         This uses quadratic probing: i = ( initial + j^2) % m where j = 1,2,3 etc. and m = table capacity.
         """
-        # print("HERE WE START TO PROBE")
         index = index
-        # num = 1
+        num = 1
+        look = index
 
-        # while da[index] is not None:
-        #     if da[index].is_tombstone is True:
-        #         break
-        #     index = index + (num ** 2) % capacity
-        #     num += 1
-        #     # if index >= capacity:
-        #     #     index = 0
-        #     #     num = 0
-        #     # else:
-        #     #     num += 1
-        #
-        # da[index] = HashEntry(key, value)
-
-        for num in range(1, capacity):
-            look = index + (num ** 2) % capacity
-            if look >= capacity:
-                for num in range(index):
-                    index = 0
-                    look = index + (num ** 2) % capacity
-                    if da[look] is None or da[look].is_tombstone is True:
-                        da[look] = HashEntry(key, value)
-                        self.size += 1
-                        break
-            if da[look] is None or da[look].is_tombstone is True:
-                da[look] = HashEntry(key, value)
-                self.size += 1
+        while da[look] is not None:
+            if da[look].key == key:
+                self.size -= 1
                 break
+            look = index + (num ** 2) % capacity
+            num += 1
 
-            elif da[look].key == key:
-                da[look].value = value
+            if look >= self.capacity:
+                index = 0
+                num = 0
+                look = look = index + (num ** 2) % capacity
+
+        da[look] = HashEntry(key,value)
+        self.size += 1
+
+
+        # for num in range(1, capacity):
+        #     look = index + (num ** 2) % capacity
+        #     if look >= capacity:
+        #         for num in range(index):
+        #             index = 0
+        #             look = index + (num ** 2) % capacity
+        #             if da[look] is None or da[look].is_tombstone is True:
+        #                 da[look] = HashEntry(key, value)
+        #                 self.size += 1
+        #                 break
+        #
+        #             elif da[look].key == key:
+        #                 da[look].value = value
+        #
+        #     if da[look] is None or da[look].is_tombstone is True:
+        #         da[look] = HashEntry(key, value)
+        #         self.size += 1
+        #         break
+        #
+        #     elif da[look].key == key:
+        #         da[look].value = value
 
     def put(self, key: str, value: object) -> None:
         """
@@ -235,22 +242,20 @@ if __name__ == "__main__":
     # m.put('key4', 40)
     # print(m.empty_buckets(), m.size, m.capacity)
     #
-    print("\nPDF - empty_buckets example 2")
-    print("-----------------------------")
+    # print("\nPDF - empty_buckets example 2")
+    # print("-----------------------------")
+    # m = HashMap(50, hash_function_1)
+    # for i in range(150):
+    #     m.put('key' + str(i), i * 100)
+    #     if i % 30 == 0:
+    #         print(m.empty_buckets(), m.size, m.capacity)
+
     m = HashMap(50, hash_function_1)
     for i in range(150):
         m.put('key' + str(i), i * 100)
         if i % 30 == 0:
             print(m.empty_buckets(), m.size, m.capacity)
 
-    # m = HashMap(50, hash_function_1)
-    # for i in range(19):
-    #     m.put('key' + str(i), i * 100)
-    #     if i % 30 == 0:
-    #         print(m.empty_buckets(), m.size, m.capacity)
-
-
-    print(m)
 
 
 
