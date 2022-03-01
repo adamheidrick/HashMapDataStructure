@@ -97,11 +97,31 @@ class HashMap:
         """
         # print("HERE WE START TO PROBE")
         index = index
+        # num = 1
+
+        # while da[index] is not None:
+        #     if da[index].is_tombstone is True:
+        #         break
+        #     index = index + (num ** 2) % capacity
+        #     num += 1
+        #     # if index >= capacity:
+        #     #     index = 0
+        #     #     num = 0
+        #     # else:
+        #     #     num += 1
+        #
+        # da[index] = HashEntry(key, value)
+
         for num in range(1, capacity):
             look = index + (num ** 2) % capacity
             if look >= capacity:
-                index = 0
-                look = index + (num ** 2) % capacity
+                for num in range(index):
+                    index = 0
+                    look = index + (num ** 2) % capacity
+                    if da[look] is None or da[look].is_tombstone is True:
+                        da[look] = HashEntry(key, value)
+                        self.size += 1
+                        break
             if da[look] is None or da[look].is_tombstone is True:
                 da[look] = HashEntry(key, value)
                 self.size += 1
@@ -224,13 +244,13 @@ if __name__ == "__main__":
             print(m.empty_buckets(), m.size, m.capacity)
 
     # m = HashMap(50, hash_function_1)
-    # for i in range(20):
+    # for i in range(19):
     #     m.put('key' + str(i), i * 100)
     #     if i % 30 == 0:
     #         print(m.empty_buckets(), m.size, m.capacity)
-    #
-    #
-    # print(m)
+
+
+    print(m)
 
 
 
