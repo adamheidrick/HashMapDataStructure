@@ -107,9 +107,17 @@ class HashMap:
             num += 1
 
             if look >= self.capacity:
-                index = 0
-                num = 0
-                look = look = index + (num ** 2) % capacity
+                # sepcial case to look at index 0
+                if da[0] is not None and da[0].key == key:
+                    look = 0
+                    break
+                elif da[0] is None:
+                    look = 0
+                    break
+                else:
+                    index = 1
+                    num = 1
+                    look = look = index + (num ** 2) % capacity
 
         da[look] = HashEntry(key,value)
         self.size += 1
@@ -256,6 +264,7 @@ if __name__ == "__main__":
         if i % 30 == 0:
             print(m.empty_buckets(), m.size, m.capacity)
 
+    print(m)
 
 
 
