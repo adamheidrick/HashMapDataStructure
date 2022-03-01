@@ -152,6 +152,7 @@ class HashMap:
         while self.buckets[look] is not None:
             if self.buckets[look].key == key:
                 self.buckets[look].is_tombstone = True
+                self.size -= 1
                 return
             else:
                 look = (index + num ** 2) % self.capacity
