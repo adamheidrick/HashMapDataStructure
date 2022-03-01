@@ -202,6 +202,7 @@ class HashMap:
         if self.size / new_capacity >= 0.5:
             new_capacity = new_capacity * 2
 
+        size = self.size
 
         new_buckets = DynamicArray()
         for _ in range(new_capacity):
@@ -217,15 +218,10 @@ class HashMap:
                 else:
                     # write own quad probe.
                     # take the fucking object and probe for its place. If it works for put then it works for this
-                    # self.quad_probe(new_buckets, new_index, self.buckets[index].key,\
-                    #                 self.buckets[index].value, new_capacity)
+                    self.quad_probe(new_buckets, new_index, self.buckets[index].key,\
+                                    self.buckets[index].value, new_capacity)
 
-                    for num in range(1, new_capacity):
-                        look = (index + num ** 2) % new_capacity
-                        if new_buckets[look] is None:
-                            new_buckets[look] = self.buckets[index]
-                            break
-
+        self.size = size
         self.buckets = new_buckets
         self.capacity = new_capacity
 
