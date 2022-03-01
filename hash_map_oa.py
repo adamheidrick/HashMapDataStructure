@@ -95,20 +95,6 @@ class HashMap:
         """
         This uses quadratic probing: i = ( initial + j^2) % m where j = 1,2,3 etc. and m = table capacity.
         """
-        # index = index
-        # num = 1
-        # look = index
-        #
-        # while da[look] is not None:
-        #     if da[look].key == key:
-        #         self.size -= 1
-        #         break
-        #     look = (index + num ** 2) % capacity
-        #     num += 1
-        #
-        # da[look] = HashEntry(key,value)
-        # self.size += 1
-
 
         for num in range(1, capacity):
             look = (index + num ** 2) % capacity
@@ -120,6 +106,7 @@ class HashMap:
 
             elif da[look].key == key:
                 da[look].value = value
+                break
 
     def put(self, key: str, value: object) -> None:
         """
