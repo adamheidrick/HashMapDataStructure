@@ -128,7 +128,7 @@ class HashMap:
         """
 
         if self.table_load() >= 0.5:
-            self.resize_table(self.capacity)
+            self.resize_table(self.capacity * 2)
 
         index = self.hash_function(key) % self.capacity
 
@@ -226,7 +226,14 @@ class HashMap:
         """
         TODO: Write this implementation
         """
-        pass
+        new_arr = DynamicArray()
+        for index in range(self.capacity):
+            if self.buckets[index] is not None:
+                if self.buckets[index].is_tombstone is False:
+                    new_arr.append(self.buckets[index].key)
+
+        return new_arr
+
 
 
 if __name__ == "__main__":
