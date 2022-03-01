@@ -151,10 +151,10 @@ class HashMap:
         num = 1
         look = index
         while self.buckets[look] is not None:
-            if self.buckets[look].key == key:
+            if self.buckets[look].key == key and self.buckets[look].is_tombstone is False:
                 self.buckets[look].is_tombstone = True
                 self.size -= 1
-                break
+                return
             else:
                 look = (index + num ** 2) % self.capacity
                 num += 1
