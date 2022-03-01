@@ -108,17 +108,36 @@ class HashMap:
         This uses quadratic probing: i = ( initial + j^2) % m where j = 1,2,3 etc. and m = table capacity.
         """
 
-        for num in range(1, capacity):
-            look = (index + num ** 2) % capacity
-
-            if da[look] is None or da[look].is_tombstone is True:
+        index = self.hash_function(key) % capacity
+        num = 1
+        look = index
+        while da[look] is not None:
+            if da[index].is_tombstone is True:
                 da[look] = HashEntry(key, value)
-                self.size += 1
-                break
+                return
 
             elif da[look].key == key:
                 da[look].value = value
-                break
+                return
+
+            else:
+                look = (index + num ** 2) % capacity
+                num += 1
+
+        da[look] = HashEntry(key, value)
+        self.size += 1
+
+        # for num in range(1, capacity):
+        #     look = (index + num ** 2) % capacity
+        #
+        #     if da[look] is None or da[look].is_tombstone is True:
+        #         da[look] = HashEntry(key, value)
+        #         self.size += 1
+        #         break
+        #
+        #     elif da[look].key == key:
+        #         da[look].value = value
+        #         break
 
     def put(self, key: str, value: object) -> None:
         """
@@ -230,6 +249,8 @@ class HashMap:
         self.size = size  # restore size
         self.buckets = new_buckets  # hooks up new DA to be the self.da
         self.capacity = new_capacity
+
+
 
     def get_keys(self) -> DynamicArray:
         """
@@ -450,11 +471,12 @@ if __name__ == "__main__":
     keys = [i for i in range(25, 1000, 13)]
     for key in keys:
         m.put(str(key), key * 42)
-    print(m.size, m.capacity)
-    print(m)
-    print("end of list")
+    # print(m.size, m.capacity)
     # It works to this point and this is the same test as gradescope.
     # PUT WORKS SO JUST PUT NEW VALUES IN! WHAT IS THE PROBLEM?
+    print(m.size, m.capacity)
+    print(m.resize_table(111))
+    print(m)
 
 
     # print("\nPDF - get_keys example 1")
