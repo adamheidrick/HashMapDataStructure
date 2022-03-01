@@ -91,21 +91,43 @@ class HashMap:
         """
         pass
 
+    def quad_probe(self, da, index, key, value, capacity):
+        """
+        This uses quadratic probing: i = ( initial + j^2) % m where j = 1,2,3 etc. and m = table capacity.
+        """
+        # print("HERE WE START TO PROBE")
+        for num in range(1, capacity):
+            look = (index + (num ^ 2)) % capacity
+            if da[look] is None or da[look].is_tombstone is True:
+                da[look] = HashEntry(key, value)
+                self.size += 1
+                break
+
+            elif da[look].key == key:
+                da[look].value = value
+
     def put(self, key: str, value: object) -> None:
         """
         This method updates the key / value pair in the hash map. If a key already exists then the value is updated.
         If the table load factor is greater than .05, the table is resized.
-        This uses quadratic probing: i = ( initial + j^2) % m where j = 1,2,3 etc. and m = table capacity.
+        This uses a quadratic probing helper function.
         """
-        # remember, if the load factor is greater than 0.5,
-        # resize the table before putting the new key/value pair
-        
-        index = self.hash_function(key)
+
+        if self.table_load() >= 0.5:
+            self.resize_table(self.capacity * 2)
+
+        index = self.hash_function(key) % self.capacity
+
         if self.buckets[index] is None:
             self.buckets[index] = HashEntry(key, value)
+            self.size += 1
 
-        # Then start looking using quadratic probing.
-        pass
+        elif self.buckets[index].key == key:  # if not none and same key then we update the value.
+            self.buckets[index].value = value
+
+        else:
+            self.quad_probe(self.buckets, index, key, value, self.capacity)  # Then we need to probe
+
 
     def remove(self, key: str) -> None:
         """
@@ -125,20 +147,47 @@ class HashMap:
         """
         This method returns the number of empty buckets in the hash table
         """
-        pass
+        buckets = 0
+        for index in range(self.capacity):
+            if self.buckets[index] is None:
+                buckets += 1
+
+        return buckets
 
     def table_load(self) -> float:
         """
-        TODO: Write this implementation
+        This method returns the current has table load factor
         """
-        pass
+        return self.size / self.capacity
 
     def resize_table(self, new_capacity: int) -> None:
         """
         TODO: Write this implementation
         """
-        # remember to rehash non-deleted entries into new table
-        pass
+        if new_capacity < 1:
+            return
+        size = self.size
+
+        new_buckets = DynamicArray()
+        for _ in range(new_capacity):
+            new_buckets.append(None)
+
+        # iterate throughthe old list and rehash
+        for index in range(self.capacity):
+            if self.buckets[index] is not None and self.buckets[index].is_tombstone is False:
+                new_index = self.hash_function(self.buckets[index].key) % new_capacity
+                if new_buckets[new_index] is None:
+                    new_buckets[new_index] = self.buckets[index]
+                else:
+                    self.quad_probe(new_buckets, new_index, self.buckets[index].key,\
+                                    self.buckets[index].value, new_capacity)
+
+        self.size = size
+        self.buckets = new_buckets
+        self.capacity = new_capacity
+
+
+
 
     def get_keys(self) -> DynamicArray:
         """
@@ -147,21 +196,21 @@ class HashMap:
         pass
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
-    print("\nPDF - empty_buckets example 1")
-    print("-----------------------------")
-    m = HashMap(100, hash_function_1)
-    print(m.empty_buckets(), m.size, m.capacity)
-    m.put('key1', 10)
-    print(m.empty_buckets(), m.size, m.capacity)
-    m.put('key2', 20)
-    print(m.empty_buckets(), m.size, m.capacity)
-    m.put('key1', 30)
-    print(m.empty_buckets(), m.size, m.capacity)
-    m.put('key4', 40)
-    print(m.empty_buckets(), m.size, m.capacity)
-
+    # print("\nPDF - empty_buckets example 1")
+    # print("-----------------------------")
+    # m = HashMap(100, hash_function_1)
+    # print(m.empty_buckets(), m.size, m.capacity)
+    # m.put('key1', 10)
+    # print(m.empty_buckets(), m.size, m.capacity)
+    # m.put('key2', 20)
+    # print(m.empty_buckets(), m.size, m.capacity)
+    # m.put('key1', 30)
+    # print(m.empty_buckets(), m.size, m.capacity)
+    # m.put('key4', 40)
+    # print(m.empty_buckets(), m.size, m.capacity)
+    # #
     # print("\nPDF - empty_buckets example 2")
     # print("-----------------------------")
     # # this test assumes that put() has already been correctly implemented
@@ -221,6 +270,29 @@ if __name__ == "__main__":
     #     m.put('str' + str(i), i * 100)
     #     if i % 25 == 24:
     #         print(m.empty_buckets(), m.table_load(), m.size, m.capacity)
+
+    # m = HashMap(10, hash_function_1)
+    # m.put('key1', 10)
+    # print(m)
+    # m.put('key1', 20)
+    # print(m)
+    # print(m.table_load())
+    # m.put('key2', 20)
+    # print(m)
+    # print(m.table_load())
+    # m.put('key3', 20)
+    # print(m)
+    # print(m.table_load())
+    # m.put('key4', 20)
+    # print(m)
+    # print(m.table_load())
+    # m.put('key5', 20)
+    # print(m)
+    # print(m.table_load())
+    # m.put('key6', 20)
+    # print(m)
+    # print(m.table_load())
+    # print(m.size)
     #
     # print("\nPDF - put example 2")
     # print("-------------------")
