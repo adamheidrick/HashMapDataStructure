@@ -199,6 +199,9 @@ class HashMap:
         if new_capacity < 1 or new_capacity < self.size:
             return
 
+        if self.size / new_capacity >= 0.5:
+            new_capacity = new_capacity * 2
+
         size = self.size
 
         new_buckets = DynamicArray()
