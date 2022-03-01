@@ -116,7 +116,7 @@ class HashMap:
         """
 
         if self.table_load() >= 0.5:
-            self.resize_table(self.capacity)
+            self.resize_table(self.capacity * 2)
 
         index = self.hash_function(key) % self.capacity
 
@@ -166,11 +166,10 @@ class HashMap:
         """
         TODO: Write this implementation
         """
-        if new_capacity < 1:
+        if new_capacity < 1 or new_capacity < self.size:
             return
-        size = self.size
 
-        new_capacity = new_capacity * 2
+        size = self.size
 
         new_buckets = DynamicArray()
         for _ in range(new_capacity):
