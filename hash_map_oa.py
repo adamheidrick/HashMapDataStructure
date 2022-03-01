@@ -202,23 +202,30 @@ class HashMap:
         if self.size / new_capacity >= 0.5:
             new_capacity = new_capacity * 2
 
-        size = self.size
 
         new_buckets = DynamicArray()
         for _ in range(new_capacity):
             new_buckets.append(None)
 
         # iterate through the old list and rehash
+        # Something is wrong here with the rehash.
         for index in range(self.capacity):
             if self.buckets[index] is not None and self.buckets[index].is_tombstone is False:
                 new_index = self.hash_function(self.buckets[index].key) % new_capacity
                 if new_buckets[new_index] is None:
                     new_buckets[new_index] = self.buckets[index]
                 else:
-                    self.quad_probe(new_buckets, new_index, self.buckets[index].key,\
-                                    self.buckets[index].value, new_capacity)
+                    # write own quad probe.
+                    # take the fucking object and probe for its place. If it works for put then it works for this
+                    # self.quad_probe(new_buckets, new_index, self.buckets[index].key,\
+                    #                 self.buckets[index].value, new_capacity)
 
-        self.size = size
+                    for num in range(1, new_capacity):
+                        look = (index + num ** 2) % new_capacity
+                        if new_buckets[look] is None:
+                            new_buckets[look] = self.buckets[index]
+                            break
+
         self.buckets = new_buckets
         self.capacity = new_capacity
 
@@ -397,15 +404,15 @@ if __name__ == "__main__":
     #     print(i, m.get(str(i)), m.get(str(i)) == i * 10)
     #     print(i + 1, m.get(str(i + 1)), m.get(str(i + 1)) == (i + 1) * 10)
     #
-    print("\nPDF - remove example 1")
-    print("----------------------")
-    m = HashMap(50, hash_function_1)
-    print(m.get('key1'))
-    m.put('key1', 10)
-    print(m.get('key1'))
-    m.remove('key1')
-    print(m.get('key1'))
-    m.remove('key4')
+    # print("\nPDF - remove example 1")
+    # print("----------------------")
+    # m = HashMap(50, hash_function_1)
+    # print(m.get('key1'))
+    # m.put('key1', 10)
+    # print(m.get('key1'))
+    # m.remove('key1')
+    # print(m.get('key1'))
+    # m.remove('key4')
     #
     # print("\nPDF - resize example 1")
     # print("----------------------")
@@ -435,17 +442,17 @@ if __name__ == "__main__":
     #         result &= not m.contains_key(str(key + 1))
     #     print(capacity, result, m.size, m.capacity, round(m.table_load(), 2))
     #
-    # print("\nPDF - get_keys example 1")
-    # print("------------------------")
-    # m = HashMap(10, hash_function_2)
-    # for i in range(100, 200, 10):
-    #     m.put(str(i), str(i * 10))
-    # print(m.get_keys())
+    print("\nPDF - get_keys example 1")
+    print("------------------------")
+    m = HashMap(10, hash_function_2)
+    for i in range(100, 200, 10):
+        m.put(str(i), str(i * 10))
+    print(m.get_keys())
     #
-    # m.resize_table(1)
-    # print(m.get_keys())
+    m.resize_table(1)
+    print(m.get_keys())
     #
-    # m.put('200', '2000')
-    # m.remove('100')
-    # m.resize_table(2)
-    # print(m.get_keys())
+    m.put('200', '2000')
+    m.remove('100')
+    m.resize_table(2)
+    print(m.get_keys())
