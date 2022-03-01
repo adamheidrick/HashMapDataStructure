@@ -89,10 +89,10 @@ class HashMap:
 
     def get(self, key: str) -> object:
         """
-        This method returns the value associated with the given key. If the key is not in the has map then
+        This method returns the value associated with the given key. If the key is not in the hashmap, then
         None is returned.
         """
-        # use quad probing
+
         index = self.hash_function(key) % self.capacity
         num = 1
         look = index
@@ -103,7 +103,7 @@ class HashMap:
                 look = (index + num ** 2) % self.capacity
                 num += 1
 
-    def quad_probe(self, da, index, key, value, capacity):
+    def quad_probe(self, da: DynamicArray, index: int, key: str, value: object, capacity: int) -> None:
         """
         This uses quadratic probing: i = ( initial + j^2) % m where j = 1,2,3 etc. and m = table capacity.
         """
@@ -140,12 +140,11 @@ class HashMap:
             self.buckets[index].value = value
 
         else:
-            self.quad_probe(self.buckets, index, key, value, self.capacity)  # Then we need to probe
-
+            self.quad_probe(self.buckets, index, key, value, self.capacity)  # Index is full, so we need to probe.
 
     def remove(self, key: str) -> None:
         """
-        TODO: Write this implementation
+        This method removes a value from the hashmap. Remove here is just a toggle of the is_tombstone value.
         """
         index = self.hash_function(key) % self.capacity
         num = 1
@@ -161,7 +160,7 @@ class HashMap:
 
     def contains_key(self, key: str) -> bool:
         """
-        TODO: Write this implementation
+        This method returns a boolean if a key is in the hashmap.
         """
         index = self.hash_function(key) % self.capacity
         num = 1
@@ -177,7 +176,7 @@ class HashMap:
 
     def empty_buckets(self) -> int:
         """
-        This method returns the number of empty buckets in the hash table
+        This method returns the number of empty buckets in the hash table.
         """
         buckets = 0
         for index in range(self.capacity):
@@ -188,46 +187,53 @@ class HashMap:
 
     def table_load(self) -> float:
         """
-        This method returns the current has table load factor
+        This method returns the current hash table load factor.
         """
         return self.size / self.capacity
 
     def resize_table(self, new_capacity: int) -> None:
         """
-        TODO: Write this implementation
+        This method resizes the hash table.
+        It creates a new Dynamic Array with the new size and rehashes the old objects into the new array.
         """
         if new_capacity < 1 or new_capacity < self.size:
             return
 
-        if self.size / new_capacity >= 0.5:
+        if self.size / new_capacity >= 0.5:  # If the new capacity tips the load factor, then the size is doubled.
             new_capacity = new_capacity * 2
 
-        size = self.size
+        size = self.size  # This is to store the size value as the percolate method adjusts the size.
 
         new_buckets = DynamicArray()
-        for _ in range(new_capacity):
+
+        for _ in range(new_capacity):  # The new array is appended with None to fill it's new size.
             new_buckets.append(None)
 
         # iterate through the old list and rehash
-        # Something is wrong here with the rehash.
         for index in range(self.capacity):
-            if self.buckets[index] is not None and self.buckets[index].is_tombstone is False:
-                new_index = self.hash_function(self.buckets[index].key) % new_capacity
-                if new_buckets[new_index] is None:
+
+            if self.buckets[index] is not None and self.buckets[index].is_tombstone is False:  # An object was found
+
+                new_index = self.hash_function(self.buckets[index].key) % new_capacity  # New index calculated
+
+                if new_buckets[new_index] is None:  # If the spot is open, then the object is inserted.
                     new_buckets[new_index] = self.buckets[index]
-                else:
-                    # write own quad probe.
-                    # take the fucking object and probe for its place. If it works for put then it works for this
+
+                else:  # We use the quade probe method to find a new spot.
+                    """TA: This is for some reason failing my last gradescope test. 
+                    I have no idea why. Everything else works and put uses the same method. 
+                    This is the first assignment where I have accepted gradescope defeat. But I am defeated. 
+                    """
                     self.quad_probe(new_buckets, new_index, self.buckets[index].key,\
                                     self.buckets[index].value, new_capacity)
 
-        self.size = size
-        self.buckets = new_buckets
+        self.size = size  # restore size
+        self.buckets = new_buckets  # hooks up new DA to be the self.da
         self.capacity = new_capacity
 
     def get_keys(self) -> DynamicArray:
         """
-        TODO: Write this implementation
+        This method returns a Dynamic Array appended with the keys of the hashmap.
         """
         new_arr = DynamicArray()
         for index in range(self.capacity):
@@ -238,9 +244,8 @@ class HashMap:
         return new_arr
 
 
-
 if __name__ == "__main__":
-
+    # TEST AWAY!
     # print("\nPDF - empty_buckets example 1")
     # print("-----------------------------")
     # m = HashMap(100, hash_function_1)
@@ -268,10 +273,6 @@ if __name__ == "__main__":
     #     if i % 30 == 0:
     #         print(m.empty_buckets(), m.size, m.capacity)
 
-
-
-
-    #
     # print("\nPDF - table_load example 1")
     # print("--------------------------")
     # m = HashMap(100, hash_function_1)
@@ -426,6 +427,9 @@ if __name__ == "__main__":
     #     m.put(str(key), key * 42)
     # print(m.size, m.capacity)
     #
+    # m.resize_table(111)
+    # print(m)
+    #
     # for capacity in range(111, 1000, 117):
     #     m.resize_table(capacity)
     #
@@ -438,17 +442,32 @@ if __name__ == "__main__":
     #         result &= not m.contains_key(str(key + 1))
     #     print(capacity, result, m.size, m.capacity, round(m.table_load(), 2))
     #
-    print("\nPDF - get_keys example 1")
-    print("------------------------")
-    m = HashMap(10, hash_function_2)
-    for i in range(100, 200, 10):
-        m.put(str(i), str(i * 10))
-    print(m.get_keys())
-    #
-    m.resize_table(1)
-    print(m.get_keys())
-    #
-    m.put('200', '2000')
-    m.remove('100')
-    m.resize_table(2)
-    print(m.get_keys())
+
+    # SELF TEST. USING GRADESCHOPE TO PERFORM THE SAME TEST:
+    print("\nPDF - resize example 2")
+    print("----------------------")
+    m = HashMap(75, hash_function_2)
+    keys = [i for i in range(25, 1000, 13)]
+    for key in keys:
+        m.put(str(key), key * 42)
+    print(m.size, m.capacity)
+    print(m)
+    print("end of list")
+    # It works to this point and this is the same test as gradescope.
+    # PUT WORKS SO JUST PUT NEW VALUES IN! WHAT IS THE PROBLEM?
+
+
+    # print("\nPDF - get_keys example 1")
+    # print("------------------------")
+    # m = HashMap(10, hash_function_2)
+    # for i in range(100, 200, 10):
+    #     m.put(str(i), str(i * 10))
+    # print(m.get_keys())
+    # #
+    # m.resize_table(1)
+    # print(m.get_keys())
+    # #
+    # m.put('200', '2000')
+    # m.remove('100')
+    # m.resize_table(2)
+    # print(m.get_keys())
