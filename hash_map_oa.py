@@ -96,9 +96,12 @@ class HashMap:
         This uses quadratic probing: i = ( initial + j^2) % m where j = 1,2,3 etc. and m = table capacity.
         """
         # print("HERE WE START TO PROBE")
-
+        index = index
         for num in range(1, capacity):
             look = index + (num ** 2) % capacity
+            if look >= capacity:
+                index = 0
+                look = index + (num ** 2) % capacity
             if da[look] is None or da[look].is_tombstone is True:
                 da[look] = HashEntry(key, value)
                 self.size += 1
@@ -214,21 +217,20 @@ if __name__ == "__main__":
     #
     print("\nPDF - empty_buckets example 2")
     print("-----------------------------")
-    # this test assumes that put() has already been correctly implemented
-    # m = HashMap(50, hash_function_1)
-    # for i in range(150):
-    #     m.put('key' + str(i), i * 100)
-    #     if i % 30 == 0:
-    #         print(m.empty_buckets(), m.size, m.capacity)
-
     m = HashMap(50, hash_function_1)
-    for i in range(12):
+    for i in range(150):
         m.put('key' + str(i), i * 100)
         if i % 30 == 0:
             print(m.empty_buckets(), m.size, m.capacity)
 
-
-    print(m)
+    # m = HashMap(50, hash_function_1)
+    # for i in range(20):
+    #     m.put('key' + str(i), i * 100)
+    #     if i % 30 == 0:
+    #         print(m.empty_buckets(), m.size, m.capacity)
+    #
+    #
+    # print(m)
 
 
 
