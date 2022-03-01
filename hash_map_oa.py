@@ -116,7 +116,7 @@ class HashMap:
         """
 
         if self.table_load() >= 0.5:
-            self.resize_table(self.capacity * 2)
+            self.resize_table(self.capacity)
 
         index = self.hash_function(key) % self.capacity
 
@@ -168,6 +168,8 @@ class HashMap:
         """
         if new_capacity < 1 or new_capacity < self.size:
             return
+
+        new_capacity = new_capacity * 2
 
         size = self.size
 
