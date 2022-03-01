@@ -95,43 +95,31 @@ class HashMap:
         """
         This uses quadratic probing: i = ( initial + j^2) % m where j = 1,2,3 etc. and m = table capacity.
         """
-        index = index
-        num = 1
-        look = index
-
-        while da[look] is not None:
-            if da[look].key == key:
-                self.size -= 1
-                break
-            look = (index + num ** 2) % capacity
-            num += 1
-
-
-        da[look] = HashEntry(key,value)
-        self.size += 1
-
-
-        # for num in range(1, capacity):
-        #     look = index + (num ** 2) % capacity
-        #     if look >= capacity:
-        #         for num in range(index):
-        #             index = 0
-        #             look = index + (num ** 2) % capacity
-        #             if da[look] is None or da[look].is_tombstone is True:
-        #                 da[look] = HashEntry(key, value)
-        #                 self.size += 1
-        #                 break
+        # index = index
+        # num = 1
+        # look = index
         #
-        #             elif da[look].key == key:
-        #                 da[look].value = value
-        #
-        #     if da[look] is None or da[look].is_tombstone is True:
-        #         da[look] = HashEntry(key, value)
-        #         self.size += 1
+        # while da[look] is not None:
+        #     if da[look].key == key:
+        #         self.size -= 1
         #         break
+        #     look = (index + num ** 2) % capacity
+        #     num += 1
         #
-        #     elif da[look].key == key:
-        #         da[look].value = value
+        # da[look] = HashEntry(key,value)
+        # self.size += 1
+
+
+        for num in range(1, capacity):
+            look = (index + num ** 2) % capacity
+
+            if da[look] is None or da[look].is_tombstone is True:
+                da[look] = HashEntry(key, value)
+                self.size += 1
+                break
+
+            elif da[look].key == key:
+                da[look].value = value
 
     def put(self, key: str, value: object) -> None:
         """
@@ -199,7 +187,7 @@ class HashMap:
         for _ in range(new_capacity):
             new_buckets.append(None)
 
-        # iterate throughthe old list and rehash
+        # iterate through the old list and rehash
         for index in range(self.capacity):
             if self.buckets[index] is not None and self.buckets[index].is_tombstone is False:
                 new_index = self.hash_function(self.buckets[index].key) % new_capacity
@@ -212,9 +200,6 @@ class HashMap:
         self.size = size
         self.buckets = new_buckets
         self.capacity = new_capacity
-
-
-
 
     def get_keys(self) -> DynamicArray:
         """
@@ -238,21 +223,20 @@ if __name__ == "__main__":
     # m.put('key4', 40)
     # print(m.empty_buckets(), m.size, m.capacity)
     #
-    # print("\nPDF - empty_buckets example 2")
-    # print("-----------------------------")
+    print("\nPDF - empty_buckets example 2")
+    print("-----------------------------")
+    m = HashMap(50, hash_function_1)
+    for i in range(150):
+        m.put('key' + str(i), i * 100)
+        if i % 30 == 0:
+            print(m.empty_buckets(), m.size, m.capacity)
+
     # m = HashMap(50, hash_function_1)
     # for i in range(150):
     #     m.put('key' + str(i), i * 100)
     #     if i % 30 == 0:
     #         print(m.empty_buckets(), m.size, m.capacity)
-    #
-    # m = HashMap(50, hash_function_1)
-    # for i in range(150):
-    #     m.put('key' + str(i), i * 100)
-    #     if i % 30 == 0:
-    #         print(m.empty_buckets(), m.size, m.capacity)
-    #
-    # print(m)
+
 
 
 
@@ -300,13 +284,13 @@ if __name__ == "__main__":
     # m.clear()
     # print(m.size, m.capacity)
     #
-    print("\nPDF - put example 1")
-    print("-------------------")
-    m = HashMap(50, hash_function_1)
-    for i in range(150):
-        m.put('str' + str(i), i * 100)
-        if i % 25 == 24:
-            print(m.empty_buckets(), m.table_load(), m.size, m.capacity)
+    # print("\nPDF - put example 1")
+    # print("-------------------")
+    # m = HashMap(50, hash_function_1)
+    # for i in range(150):
+    #     m.put('str' + str(i), i * 100)
+    #     if i % 25 == 24:
+    #         print(m.empty_buckets(), m.table_load(), m.size, m.capacity)
 
     # m = HashMap(10, hash_function_1)
     # m.put('key1', 10)
@@ -331,13 +315,13 @@ if __name__ == "__main__":
     # print(m.table_load())
     # print(m.size)
     #
-    print("\nPDF - put example 2")
-    print("-------------------")
-    m = HashMap(40, hash_function_2)
-    for i in range(50):
-        m.put('str' + str(i // 3), i * 100)
-        if i % 10 == 9:
-            print(m.empty_buckets(), m.table_load(), m.size, m.capacity)
+    # print("\nPDF - put example 2")
+    # print("-------------------")
+    # m = HashMap(40, hash_function_2)
+    # for i in range(50):
+    #     m.put('str' + str(i // 3), i * 100)
+    #     if i % 10 == 9:
+    #         print(m.empty_buckets(), m.table_load(), m.size, m.capacity)
     #
     # print("\nPDF - contains_key example 1")
     # print("----------------------------")
