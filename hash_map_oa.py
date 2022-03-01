@@ -103,7 +103,7 @@ class HashMap:
                 look = (index + num ** 2) % self.capacity
                 num += 1
 
-    def quad_probe(self, da: DynamicArray, index: int, key: str, value: object, capacity: int) -> None:
+    def quad_probe(self, da: DynamicArray, key: str, value: object, capacity: int) -> None:
         """
         This uses quadratic probing: i = ( initial + j^2) % m where j = 1,2,3 etc. and m = table capacity.
         """
@@ -127,18 +127,6 @@ class HashMap:
         da[look] = HashEntry(key, value)
         self.size += 1
 
-        # for num in range(1, capacity):
-        #     look = (index + num ** 2) % capacity
-        #
-        #     if da[look] is None or da[look].is_tombstone is True:
-        #         da[look] = HashEntry(key, value)
-        #         self.size += 1
-        #         break
-        #
-        #     elif da[look].key == key:
-        #         da[look].value = value
-        #         break
-
     def put(self, key: str, value: object) -> None:
         """
         This method updates the key / value pair in the hash map. If a key already exists then the value is updated.
@@ -159,7 +147,7 @@ class HashMap:
             self.buckets[index].value = value
 
         else:
-            self.quad_probe(self.buckets, index, key, value, self.capacity)  # Index is full, so we need to probe.
+            self.quad_probe(self.buckets, key, value, self.capacity)  # Index is full, so we need to probe.
 
     def remove(self, key: str) -> None:
         """
@@ -243,8 +231,7 @@ class HashMap:
                     I have no idea why. Everything else works and put uses the same method. 
                     This is the first assignment where I have accepted gradescope defeat. But I am defeated. 
                     """
-                    self.quad_probe(new_buckets, new_index, self.buckets[index].key,\
-                                    self.buckets[index].value, new_capacity)
+                    self.quad_probe(new_buckets, self.buckets[index].key, self.buckets[index].value, new_capacity)
 
         self.size = size  # restore size
         self.buckets = new_buckets  # hooks up new DA to be the self.da
