@@ -219,10 +219,6 @@ class HashMap:
         self.buckets = new_buckets
         self.capacity = new_capacity
 
-        if self.table_load() >= 0.5:
-            self.resize_table(self.capacity * 2)
-
-
     def get_keys(self) -> DynamicArray:
         """
         TODO: Write this implementation
