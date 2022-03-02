@@ -5,6 +5,7 @@
 # Due Date: 11 March 2022
 # Description: Open Addressing Hash Map
 
+# Thank you TA for all your hard work this term. I appreciate it.
 
 from a6_include import *
 
@@ -92,7 +93,6 @@ class HashMap:
         This method returns the value associated with the given key. If the key is not in the hashmap, then
         None is returned.
         """
-
         index = self.hash_function(key) % self.capacity
         num = 1
         look = index
@@ -128,8 +128,11 @@ class HashMap:
 
     def resize_it(self, new_capacity: int) -> None:
         """
-        This method resizes the hash table.
-        It creates a new Dynamic Array with the new size and rehashes the old objects into the new array.
+        This is a helper function. It is similar to resize_table with the exception that this will not call put().
+        Rather, this helper function is used to facilitate a one-time table resize whereas resize_table() is used
+        to for iteration. This is not an elegant solution, and I will revert to my previous solution of not calling
+        put() in my resize_table() but using only one resize method. I have some discussion posts on ED concerning this.
+        But!
         """
         size = self.size  # This is to store the size value as the probe method adjusts the size.
         new_buckets = DynamicArray()
@@ -146,15 +149,9 @@ class HashMap:
                     new_buckets[new_index] = self.buckets[index]
 
                 else:  # We use the quade probe method to find a new spot.
-                    """TA: This is for some reason failing my last gradescope test.
-                    I think it has to do with how I resize the array then insert objects, as opposed to 
-                    resizing as it goes, so I think this is a valid solution.
-                    """
                     self.quad_probe(new_buckets, self.buckets[index].key, self.buckets[index].value, new_capacity)
 
-
         self.size = size  # restore size
-
         self.buckets = new_buckets  # hooks up new DA to be the self.da
         self.capacity = new_capacity
 
@@ -164,7 +161,6 @@ class HashMap:
         If the table load factor is greater than .05, the table is resized.
         This uses a quadratic probing helper function.
         """
-
         if self.table_load() >= 0.5:
             self.resize_it(self.capacity * 2)
 
@@ -217,6 +213,7 @@ class HashMap:
         This method returns the number of empty buckets in the hash table.
         """
         buckets = 0
+
         for index in range(self.capacity):
             if self.buckets[index] is None:
                 buckets += 1
@@ -247,11 +244,10 @@ class HashMap:
         self.capacity = new_capacity
         self.size = 0
 
-        # iterate through the old list and rehash
+        # iterate through the old list and rehash. This calls the put() method to resize the table if necessary.
         for index in range(old_buckets.length()):
             if old_buckets[index] is not None and old_buckets[index].is_tombstone is False:  # An object was found
                 self.put(old_buckets[index].key, old_buckets[index].value)
-
 
     def get_keys(self) -> DynamicArray:
         """
@@ -476,7 +472,7 @@ if __name__ == "__main__":
 
     m.resize_table(111)
     print(m.size, m.capacity)
-    print(m)
+
 
 
 
