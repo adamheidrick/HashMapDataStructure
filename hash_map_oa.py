@@ -241,41 +241,25 @@ class HashMap:
         This method resizes the hash table.
         It creates a new Dynamic Array with the new size and rehashes the old objects into the new array.
         """
-        pass
-        # if new_capacity < 1 or new_capacity < self.size:
-        #     return
-        #
-        # if self.size / new_capacity >= 0.5:  # If the new capacity tips the load factor, then the size is doubled.
-        #     new_capacity = new_capacity * 2
-        #
-        # size = self.size  # This is to store the size value as the probe method adjusts the size.
-        #
-        # new_buckets = DynamicArray()
-        #
-        # for _ in range(new_capacity):  # The new array is appended with None to fill its new capacity.
-        #     new_buckets.append(None)
-        #
-        # # iterate through the old list and rehash
-        # for index in range(self.capacity):
-        #
-        #     if self.buckets[index] is not None and self.buckets[index].is_tombstone is False:  # An object was found
-        #
-        #         new_index = self.hash_function(self.buckets[index].key) % new_capacity  # New index calculated
-        #
-        #         if new_buckets[new_index] is None:  # If the spot is open, then the object is inserted.
-        #             new_buckets[new_index] = self.buckets[index]
-        #
-        #         else:  # We use the quade probe method to find a new spot.
-        #             """TA: This is for some reason failing my last gradescope test.
-        #             I think it has to do with how I resize the array then insert objects, as opposed to
-        #             resizing as it goes, so I think this is a valid solution.
-        #             """
-        #             self.quad_probe(new_buckets, self.buckets[index].key, self.buckets[index].value, new_capacity)
-        #
-        # self.size = size  # restore size
-        # self.buckets = new_buckets  # hooks up new DA to be the self.da
-        # self.capacity = new_capacity
+        if new_capacity < 1 or new_capacity < self.size:
+            return
 
+
+
+        new_buckets = DynamicArray()
+        old_buckets = self.buckets
+
+        for _ in range(new_capacity):  # The new array is appended with None to fill its new capacity.
+            new_buckets.append(None)
+
+        self.buckets = new_buckets
+
+        # iterate through the old list and rehash
+        for index in range(old_buckets.length()):
+            if old_buckets[index] is not None and old_buckets[index].is_tombstone is False:  # An object was found
+                self.put(old_buckets[index].key, old_buckets[index].value)
+
+        self.capacity = new_capacity
 
 
     def get_keys(self) -> DynamicArray:
